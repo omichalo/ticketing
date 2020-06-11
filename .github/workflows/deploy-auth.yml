@@ -17,4 +17,9 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker push omichalo/auth      
+      - run: docker push omichalo/auth
+      - uses: digitalocean/actions-doctl@v2
+        with:
+          token: ${{secrets.DIGITALOCEAN_ACCESS_TOKEN}}
+      - run: doctl kubernetes cluster kubeconfig save omichalo
+      - run: kubectl rollout restart deployment auth-depl
